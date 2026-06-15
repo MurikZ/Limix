@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_primary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp">
+
+        <!-- Dimmed app icon -->
+        <ImageView
+            android:id="@+id/ivBlockedAppIcon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"/>
+
+        <!-- Block title (pixel style, large) -->
+        <TextView
+            android:id="@+id/tvBlockTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ЛИМИТ\nИСЧЕРПАН"
+            android:textColor="@color/orange_primary"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.04"
+            android:gravity="center"
+            android:layout_marginTop="20dp"/>
+
+        <!-- Pixel separator -->
+        <View
+            android:layout_width="140dp"
+            android:layout_height="2dp"
+            android:background="@color/orange_primary"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"/>
+
+        <!-- Subtitle: app name or task name -->
+        <TextView
+            android:id="@+id/tvBlockSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="15sp"
+            android:fontFamily="monospace"
+            android:gravity="center"/>
+
+        <!-- Main info line (usage / task description) -->
+        <TextView
+            android:id="@+id/tvBlockedAppName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dim"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:layout_marginTop="6dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"/>
+
+        <!-- Time spent label (limit type only) -->
+        <TextView
+            android:id="@+id/tvTimeSpent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/orange_primary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"/>
+
+        <!-- Lives display -->
+        <TextView
+            android:id="@+id/tvBlockLives"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="❤ ❤ ❤"
+            android:textSize="30sp"
+            android:layout_marginTop="28dp"/>
+
+        <!-- Penalty info (shown when lives were lost today) -->
+        <TextView
+            android:id="@+id/tvPenaltyInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/pixel_red"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:visibility="gone"
+            android:layout_marginTop="4dp"/>
+
+        <!-- Warning text -->
+        <TextView
+            android:id="@+id/tvWarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="РАЗБЛОКИРОВКА СТОИТ 1 ЖИЗНЬ"
+            android:textColor="@color/text_dim"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:layout_marginTop="10dp"/>
+
+        <!-- Countdown container (STRICT mode only) -->
+        <LinearLayout
+            android:id="@+id/countdownContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tvCountdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Подождите..."
+                android:textColor="@color/pixel_yellow"
+                android:textSize="18sp"
+                android:fontFamily="monospace"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <!-- Spacer -->
+        <View android:layout_width="1dp" android:layout_height="24dp"/>
+
+        <!-- Unlock button (costs 1 life) -->
+        <Button
+            android:id="@+id/btnUnlock"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="РАЗБЛОКИРОВАТЬ  (−1 ❤)"
+            android:textColor="@color/orange_primary"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.03"
+            android:background="@drawable/btn_secondary"
+            android:layout_marginBottom="14dp"/>
+
+        <!-- Close button (go home) -->
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="ЗАКРЫТЬ"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:background="@drawable/btn_primary"/>
+
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark backgrounds (pixel-art palette) -->
+    <color name="black_primary">#080810</color>
+    <color name="black_surface">#0F0F1A</color>
+    <color name="black_card">#161624</color>
+    <color name="black_border">#2A2A3A</color>
+
+    <!-- Primary accent -->
+    <color name="orange_primary">#FF6600</color>
+    <color name="orange_dark">#CC4400</color>
+
+    <!-- Pixel accents -->
+    <color name="pixel_green">#00FF88</color>
+    <color name="pixel_blue">#4488FF</color>
+    <color name="pixel_red">#FF2244</color>
+    <color name="pixel_yellow">#FFCC00</color>
+    <color name="pixel_red_dark">#CC1133</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#888899</color>
+    <color name="text_dim">#444455</color>
+
+    <!-- Status -->
+    <color name="danger">#FF2244</color>
+    <color name="danger_dark">#CC1133</color>
+    <color name="success">#00FF88</color>
+</resources>

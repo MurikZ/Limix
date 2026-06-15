@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@android:drawable/ic_menu_today"
+        android:title="Главная"/>
+
+    <!-- AI tab replaces Stats — AI is the core feature -->
+    <item
+        android:id="@+id/aiFragment"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="AI"/>
+
+    <item
+        android:id="@+id/leaderboardFragment"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="Рейтинг"/>
+
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/outline_account_circle_24"
+        android:title="Профиль"/>
+
+</menu>

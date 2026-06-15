@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_primary"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="80dp">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AI НАСТРОЙКИ"
+            android:textColor="@color/orange_primary"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:paddingTop="16dp"
+            android:paddingBottom="4dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Опиши цель — AI подберёт блокировки и строгость"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:paddingBottom="16dp"/>
+
+        <!-- Goal input card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/pixel_card"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <EditText
+                android:id="@+id/etGoalInput"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:hint="Напр: хочу учиться 4 часа без соцсетей..."
+                android:textColorHint="@color/text_dim"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:fontFamily="monospace"
+                android:background="@null"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:maxLines="3"/>
+
+            <!-- Quick goal chips -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <Button
+                    android:id="@+id/chipStudy"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:text="УЧЁБА"
+                    android:textSize="10sp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/pixel_blue"
+                    android:background="@drawable/pixel_card"
+                    android:layout_marginEnd="4dp"/>
+
+                <Button
+                    android:id="@+id/chipWork"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:text="РАБОТА"
+                    android:textSize="10sp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/orange_primary"
+                    android:background="@drawable/pixel_card"
+                    android:layout_marginEnd="4dp"/>
+
+                <Button
+                    android:id="@+id/chipDetox"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:text="ДЕТОКС"
+                    android:textSize="10sp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/pixel_red"
+                    android:background="@drawable/pixel_card"
+                    android:layout_marginEnd="4dp"/>
+
+                <Button
+                    android:id="@+id/chipSport"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:text="СПОРТ"
+                    android:textSize="10sp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/pixel_green"
+                    android:background="@drawable/pixel_card"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnAnalyze"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="АНАЛИЗИРОВАТЬ"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.1"
+                android:background="@drawable/btn_primary"
+                android:layout_marginTop="14dp"/>
+
+        </LinearLayout>
+
+        <!-- AI Suggestions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="РЕКОМЕНДАЦИИ AI"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:id="@+id/suggestionsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+        <Button
+            android:id="@+id/btnApplyAll"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="ПРИМЕНИТЬ ВСЁ"
+            android:textColor="@color/pixel_green"
+            android:textSize="14sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:background="@drawable/pixel_card"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black_border"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Day Map section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="КАРТА ДНЯ"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/pixel_card"
+            android:padding="16dp"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="РЕЖИМ КАРТЫ ДНЯ"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:fontFamily="monospace"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Блокировать все приложения кроме текущей цели"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/switchDayMapEnforce"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <!-- Task list -->
+            <LinearLayout
+                android:id="@+id/dayMapTasksContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp"/>
+
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black_border"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Blackout schedule section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="РЕЖИМ БЛОКИРОВКИ"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:fontFamily="monospace"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Блокировать все приложения по расписанию"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"/>
+
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/switchBlackoutEnabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/blackoutContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/pixel_card"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Расписание тотальной блокировки"
+                android:textColor="@color/pixel_red"
+                android:textSize="14sp"
+                android:fontFamily="monospace"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="В указанные часы все приложения будут перекрыты"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="12dp"/>
+
+            <LinearLayout
+                android:id="@+id/schedulesList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+            <Button
+                android:id="@+id/btnAddBlackout"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:text="+ ДОБАВИТЬ ПЕРИОД"
+                android:textColor="@color/orange_primary"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+                android:background="@drawable/pixel_card"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

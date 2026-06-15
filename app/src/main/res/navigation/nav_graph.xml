@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/onboardingFragment">
+    <!-- startDestination — какой экран открывается первым -->
+
+    <!-- Экран онбординга -->
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.example.limix.ui.OnboardingFragment"
+        android:label="Onboarding">
+        <!-- action — это переход на другой экран -->
+        <!-- вызывается в коде через navController.navigate(R.id.action_onboarding_to_ai) -->
+        <action
+            android:id="@+id/action_onboarding_to_ai"
+            app:destination="@id/permissionsFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/permissionsFragment"
+        android:name="com.example.limix.ui.PermissionsFragment"
+        android:label="Permissions">
+        <action
+            android:id="@+id/action_permissions_to_ai"
+            app:destination="@id/subscriptionFragment"/>
+    </fragment>
+    <!-- Экран ИИ — появляется после онбординга -->
+    <fragment
+        android:id="@+id/aiFragment"
+        android:name="com.example.limix.ui.AiFragment"
+        android:label="AI">
+        <action
+            android:id="@+id/action_ai_to_subscription"
+            app:destination="@id/subscriptionFragment"/>
+    </fragment>
+
+    <!-- Экран подписки — появляется после ИИ -->
+    <fragment
+        android:id="@+id/subscriptionFragment"
+        android:name="com.example.limix.ui.SubscriptionFragment"
+        android:label="Subscription">
+        <!-- После подписки или пропуска — идём на главный экран -->
+        <action
+            android:id="@+id/action_subscription_to_home"
+            app:destination="@id/homeFragment"/>
+    </fragment>
+
+    <!-- Главный экран — в нижней навигации -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.limix.ui.HomeFragment"
+        android:label="Home"/>
+
+    <!-- Статистика — в нижней навигации -->
+    <fragment
+        android:id="@+id/statsFragment"
+        android:name="com.example.limix.ui.StatsFragment"
+        android:label="Stats"/>
+
+    <!-- Лидерборд — в нижней навигации -->
+    <fragment
+        android:id="@+id/leaderboardFragment"
+        android:name="com.example.limix.ui.LeaderboardFragment"
+        android:label="Leaderboard"/>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.limix.ui.ProfileFragment"
+        android:label="Profile"/>
+
+</navigation>
