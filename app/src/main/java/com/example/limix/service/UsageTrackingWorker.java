@@ -5,10 +5,12 @@ import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+import com.example.limix.BuildConfig;
 import com.example.limix.data.*;
 import com.example.limix.ui.BlockActivity;
 import java.text.SimpleDateFormat;
@@ -31,72 +33,61 @@ public class UsageTrackingWorker extends Worker {
 
             // Проверяем разрешение
             if (!hasUsagePermission(ctx)) {
-                Log.d(TAG, "No usage permission");
+                if (BuildConfig.DEBUG) Log.d(TAG, "No usage permission");
                 return Result.success();
             }
 
             LimixDatabase db = LimixDatabase.getInstance(ctx);
             String today = getTodayDate();
 
-            // Получаем текущие данные от UsageStatsManager
-            // запрашиваем за последние 2 дня чтобы точно захватить полночь
-            Map<String, Long> currentUsage = getCurrentUsage(ctx);
+            // Сбрасываем записи за сегодня один раз в день при первом запуске
+            // это очищает устаревшие baseline-значения от старой версии логики
+            SharedPreferences prefs = ctx.getSharedPreferences("limix_prefs", Context.MODE_PRIVATE);
+            if (!today.equals(prefs.getString("last_reset_date", ""))) {
+                db.dailyUsageDao().deleteForDate(today);
+                prefs.edit().putString("last_reset_date", today).apply();
+                if (BuildConfig.DEBUG) Log.d(TAG, "Daily reset: cleared stale records for " + today);
+            }
 
-            Log.d(TAG, "Processing " + currentUsage.size() + " apps");
+            // Получаем время с полуночи напрямую через INTERVAL_DAILY
+            Map<String, Long> todayUsage = getTodayUsageFromMidnight(ctx);
 
-            // Обрабатываем каждое приложение
-            for (Map.Entry<String, Long> entry : currentUsage.entrySet()) {
+            if (BuildConfig.DEBUG) Log.d(TAG, "Processing " + todayUsage.size() + " apps");
+
+            for (Map.Entry<String, Long> entry : todayUsage.entrySet()) {
                 String packageName = entry.getKey();
-                long totalUsageEver = entry.getValue();
+                long usageTodayMs = entry.getValue();
 
-                // Ищем baseline для сегодняшнего дня
                 DailyUsageEntity record = db.dailyUsageDao()
                         .getByPackageAndDate(packageName, today);
 
                 if (record == null) {
-                    // Первый раз видим это приложение сегодня
-                    // Текущее значение UsageStats = всё что было до сейчас
-                    // Сохраняем как baseline — это наша точка отсчёта с полуночи
-                    record = new DailyUsageEntity(
-                            packageName,
-                            totalUsageEver, // baseline = текущее накопленное
-                            0,              // время сегодня = 0 в начале
-                            today);
+                    // baseline=0 — поле больше не используется, но оставляем в схеме
+                    record = new DailyUsageEntity(packageName, 0, usageTodayMs, today);
                     db.dailyUsageDao().insert(record);
-                    Log.d(TAG, "New baseline for " + packageName +
-                            ": " + totalUsageEver);
                 } else {
-                    // Запись уже есть — обновляем время сегодня
-                    // usageTodayMs = текущее накопленное - baseline
-                    long usageTodayMs = totalUsageEver - record.baselineMs;
-
-                    // Защита от отрицательных значений
-                    // может случиться если Android сбросил свою статистику
-                    if (usageTodayMs < 0) {
-                        record.baselineMs = totalUsageEver;
-                        usageTodayMs = 0;
-                    }
-
                     record.usageTodayMs = usageTodayMs;
                     db.dailyUsageDao().update(record);
-
-                    // Проверяем лимит
-                    checkLimit(ctx, db, packageName, usageTodayMs);
                 }
+
+                // Проверяем лимит для всех записей (в т.ч. новых)
+                checkLimit(ctx, db, packageName, usageTodayMs);
             }
 
-            // Удаляем старые записи — старше 30 дней
-            Calendar cutoff = Calendar.getInstance();
-            cutoff.add(Calendar.DAY_OF_YEAR, -30);
-            String cutoffDate = new SimpleDateFormat("yyyy-MM-dd",
-                    Locale.getDefault()).format(cutoff.getTime());
-            db.dailyUsageDao().deleteOldRecords(cutoffDate);
+            // Удаляем старые записи раз в день, не каждые 15 минут
+            if (!today.equals(prefs.getString("last_cleanup_date", ""))) {
+                Calendar cutoff = Calendar.getInstance();
+                cutoff.add(Calendar.DAY_OF_YEAR, -30);
+                String cutoffDate = new SimpleDateFormat("yyyy-MM-dd",
+                        Locale.getDefault()).format(cutoff.getTime());
+                db.dailyUsageDao().deleteOldRecords(cutoffDate);
+                prefs.edit().putString("last_cleanup_date", today).apply();
+            }
 
-            // Earn limmies for each 15-min period without violations
-            // Penalty reduces earnings (livesLostToday tracked separately)
+            // Начисляем лимми за каждые 15 минут без нарушений
             UserStatsEntity stats = db.userStatsDao().getUserStats();
             if (stats != null) {
-                int baseEarn = 3; // base limmies per 15-min period
+                int baseEarn = 3;
                 float multiplier = stats.getLimmiesMultiplier();
                 int earned = Math.max(0, Math.round(baseEarn * multiplier));
                 if (earned > 0) {
@@ -129,9 +120,8 @@ public class UsageTrackingWorker extends Worker {
         if (!packageName.equals(currentApp)) return;
 
         // Приложение открыто и лимит превышен — показываем блокировку
-        Log.d(TAG, "Limit exceeded for " + packageName +
-                " usage: " + usageTodayMs +
-                " limit: " + limitEntity.dailyLimitMs);
+        if (BuildConfig.DEBUG) Log.d(TAG, "Limit exceeded, usage=" + usageTodayMs +
+                " limit=" + limitEntity.dailyLimitMs);
 
         String appName;
         try {
@@ -152,28 +142,30 @@ public class UsageTrackingWorker extends Worker {
         ctx.startActivity(intent);
     }
 
-    // Получает текущее суммарное время каждого приложения
-    private Map<String, Long> getCurrentUsage(Context ctx) {
-        Map<String, Long> result = new HashMap<>();
-
-        UsageStatsManager usageManager = (UsageStatsManager)
+    // Возвращает время использования каждого приложения строго с 00:00 сегодняшнего дня
+    // queryAndAggregateUsageStats агрегирует по заданному диапазону, не по внутренним bucket'ам
+    private Map<String, Long> getTodayUsageFromMidnight(Context ctx) {
+        UsageStatsManager usm = (UsageStatsManager)
                 ctx.getSystemService(Context.USAGE_STATS_SERVICE);
 
-        // Запрашиваем за последние 2 дня с запасом
-        // это гарантирует что мы видим все приложения
-        long twoDaysAgo = System.currentTimeMillis() - (2 * 24 * 60 * 60 * 1000L);
-        long now = System.currentTimeMillis();
+        Calendar midnight = Calendar.getInstance();
+        midnight.set(Calendar.HOUR_OF_DAY, 0);
+        midnight.set(Calendar.MINUTE, 0);
+        midnight.set(Calendar.SECOND, 0);
+        midnight.set(Calendar.MILLISECOND, 0);
 
-        Map<String, UsageStats> stats = usageManager
-                .queryAndAggregateUsageStats(twoDaysAgo, now);
+        Map<String, UsageStats> stats = usm.queryAndAggregateUsageStats(
+                midnight.getTimeInMillis(),
+                System.currentTimeMillis()
+        );
 
-        for (Map.Entry<String, UsageStats> entry : stats.entrySet()) {
-            long time = entry.getValue().getTotalTimeInForeground();
-            if (time > 0) {
-                result.put(entry.getKey(), time);
+        Map<String, Long> result = new HashMap<>();
+        if (stats != null) {
+            for (Map.Entry<String, UsageStats> entry : stats.entrySet()) {
+                long time = entry.getValue().getTotalTimeInForeground();
+                if (time > 0) result.put(entry.getKey(), time);
             }
         }
-
         return result;
     }
 

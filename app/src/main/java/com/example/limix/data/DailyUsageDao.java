@@ -29,4 +29,8 @@ public interface DailyUsageDao {
     // Удаляем старые записи — старше 30 дней не нужны
     @Query("DELETE FROM daily_usage WHERE date < :cutoffDate")
     void deleteOldRecords(String cutoffDate);
+
+    // Удаляем все записи за конкретный день — для сброса устаревших baseline
+    @Query("DELETE FROM daily_usage WHERE date = :date")
+    void deleteForDate(String date);
 }
